@@ -1,0 +1,21 @@
+{
+  "name": "eport-account-management",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bluebird": "^3.4.0",
+    "bluebird-co": "^2.1.2",
+    "body-parser": "^1.15.1",
+    "express": "^4.13.4",
+    "mongodb": "^2.1.18"
+  },
+  "devDependencies": {
+    "mocha": "^2.5.3"
+  }
+}
