@@ -35,20 +35,22 @@ describe("Database tests",function(){
     });
 
     describe("#setPassword",function(){
+        var userId = null;
         beforeEach(function(done){
             return Promise.coroutine(function*(){
                 var db = yield MongoClient.connect(config.database.url);
                 var users = db.collection("users");
                 yield users.deleteOne({"email":"35239520@qq.com"});
-                yield users.insertOne({email:"35239520@qq.com",companyId:"4401986999"});
+                var result = yield users.insertOne({email:"35239520@qq.com",companyId:"4401986999"});
+                userId = result.insertedId;
                 done();
             })();
         });
         it("should set the passowrd to speicified account",() => {
             return (Promise.coroutine(function*(){
-                yield database.setPassword("35239520@qq.com","1234");
+                yield database.setPassword(userId,"1234");
                 var db = yield MongoClient.connect(config.database.url);
-                var account = yield db.collection("users").find({"email":"35239520@qq.com"}).limit(1).next();
+                var account = yield db.collection("users").find({_id: userId}).limit(1).next();
                 var salt = account.password.buffer.slice(0,64);
                 var expected = account.password.buffer.slice(64);
                 var actual = yield pbkdf2("1234",salt,10000,256,'sha256');
@@ -59,6 +61,10 @@ describe("Database tests",function(){
                 }
             })()).should.be.fulfilled();
         });
+        it("should throw error if userId is not a valid objectID",function(){
+            database.setPassword("1234","5678")
+                .should.be.rejectedWith("invalid userId");
+        })
     });
 
     describe("#query",function(){
@@ -85,6 +91,31 @@ describe("Database tests",function(){
                 .which.has.properties(["total","pages","records"])
                 .and.the.property("records").of.which.is.an.Array()
                 .with.the.property("length").belowOrEqual(50);
+        });
+    });
+
+    describe("#deleteAccount",function(){
+        var userId = null;
+        beforeEach(function(done){
+            return Promise.coroutine(function*(){
+                var db = yield MongoClient.connect(config.database.url);
+                var users = db.collection("users");
+                yield users.deleteOne({"email":"35239520@qq.com"});
+                var result = yield users.insertOne({email:"35239520@qq.com",companyId:"4401986999"});
+                userId = result.insertedId;
+                done();
+            })();
+        });
+        it("should delete an account if acount exists",function(){
+            return database.deleteAccount(userId).should.be.fulfilled();
+        });
+        it("should throw error if account does not exists",function(){
+            return database.deleteAccount(userId).then(function(){
+                return database.deleteAccount(userId)
+            }).should.be.rejectedWith("user not found");
+        });
+        it("should throw error if userId is not valid",function(){
+            return database.deleteAccount("1234").should.be.rejectedWith("invalid userId");
         });
     });
 });

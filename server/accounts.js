@@ -66,7 +66,7 @@ router.post("/createAccount",function(req,res){
 
 // Reset account password
 router.post("/setPassword",function(req,res){
-    var email = req.body.email
+    var userId= req.body.userId;
         passwd = req.body.password; // password in md5
 
     if(!userId || !password) {

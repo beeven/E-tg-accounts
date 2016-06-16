@@ -3,7 +3,8 @@ TODO: paging in redis
 */
 
 
-var MongoClient = require('mongodb').MongoClient,
+var MongoClient = require("mongodb").MongoClient,
+    ObjectID = require("mongodb").ObjectID,
     Promise = require("bluebird"),
     config = require("./config");
 
@@ -71,15 +72,19 @@ class Database {
         })();
     }
 
-    setPassword(email, password) {
-        var that = this;
+    setPassword(userId, password) {
+        userId = userId.toString();
+        if(!/^[a-fA-f0-9]{24}$/.test(userId)) {
+            return Promise.reject(new Error("invalid userId"));
+        }
 
+        var that = this;
         return Promise.coroutine(function*(){
             var salt = yield randomBytes(64);
             var passwd = yield pbkdf2(password,salt,10000,256,'sha256');
             var hashed = Buffer.concat([salt,passwd]);
             var result = yield that.users.updateOne(
-                {email: email},
+                {_id: new ObjectID(userId)},
                 {$set:{password: hashed}}
             );
             if(result.result.n == 1) {
@@ -114,6 +119,22 @@ class Database {
                 return passwd;
             } else {
                 return yield Promise.reject(new Error("email exists"));
+            }
+        })();
+    }
+
+    deleteAccount(userId){
+        var that = this;
+        userId = userId.toString();
+        if(!/^[a-fA-f0-9]{24}$/.test(userId)) {
+            return Promise.reject(new Error("invalid userId"));
+        }
+        return Promise.coroutine(function*(){
+            var result = yield that.users.deleteOne({_id:new ObjectID(userId)});
+            if(result.deletedCount == 1) {
+                return yield Promise.resolve();
+            } else {
+                return yield Promise.reject(new Error("user not found"));
             }
         })();
     }
