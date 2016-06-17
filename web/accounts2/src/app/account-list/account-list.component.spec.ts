@@ -16,7 +16,7 @@ import { AccountService } from './account.service';
 describe('Component: AccountList', () => {
   beforeEachProviders(()=>[AccountService])
   it('should create an instance', inject([AccountService],(accountService) => {
-    let component = new AccountListComponent(accountService);
+    let component = new AccountListComponent();
     expect(component).toBeTruthy();
   }));
 });

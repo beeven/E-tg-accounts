@@ -38,4 +38,7 @@ export class CreateAccountComponent implements OnInit {
     //                    );
   }
 
+  print() {
+    window.print();
+  }
 }

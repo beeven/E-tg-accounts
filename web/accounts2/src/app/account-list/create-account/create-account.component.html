@@ -12,13 +12,34 @@
       <button type="submit" class="btn btn-primary btn-block">查询并创建帐号</button>
     </div>
     <div class="col-sm-4">
-      <button type="submit" class="btn btn-warning btn-block">打 印</button>
+      <button type="submit" class="btn btn-warning btn-block" (click)="print()">打 印</button>
     </div>
   </div>
 </form>
 
   <div class="information">
-    <alert *ngFor="let alert of alerts;let i = index" [type]="alert.type" dismissible="true" dismissOnTimeout="500" (close)="closeAlert(i)">
+    <alert *ngFor="let alert of alerts;let i = index" [type]="alert.type" dismissible="true" (close)="closeAlert(i)">
     {{ alert?.message }}
     </alert>
   </div>
+
+<div id="print-area">
+  <h4>广州海关易通关平台临时帐号</h4>
+  <table>
+    <tbody>
+      <tr>
+        <td class="head">企业编码</td>
+        <td>4401986999</td>
+        <td class="head">企业名称</td>
+        <td>广州市海通科技公司</td>
+      </tr>
+      <tr>
+        <td class="head">登录帐号</td><td>4401986999</td>
+        <td class="head">登录密码</td><td>4401986999</td>
+      </tr>
+      <tr>
+        <td class="head">帐号有效期</td><td>2016-08-16</td>
+      </tr>
+    </tbody>
+  </table>
+</div>

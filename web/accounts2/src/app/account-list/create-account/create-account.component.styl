@@ -1,0 +1,25 @@
+#print-area
+  padding 20px
+  background-color white
+  table
+    width 100%
+    table-layout fixed
+    td
+      width 30%
+      height 25px
+    td.head
+      width 20%
+      font-weight bold
+
+
+
+@media print
+  #print-area
+    display block
+    position absolute
+    top 0
+    left 0
+    right 0
+    bottom 0
+  #print-area *
+    visibility visible
