@@ -1,38 +1,27 @@
-<div class="row">
-  <form class="form-inline">
+<div class="row search-form">
+  <form class="form－horizontal">
     <div class="form-group">
-      <label for="criteria" class="sr-only">搜索</label>
-      <input type="text" id="criteria" class="form-control col-sm-6" placeholder="邮箱地址／手机号码／企业编码">
+      <label for="criteria" class="sr-only control-label">搜索</label>
+      <div class="col-sm-4">
+        <input type="text" id="criteria" class="form-control" [(ngModel)]="criteria" placeholder="登录名／手机号码／企业编码">
+      </div>
+        <button class="btn btn-default" (click)="queryList.query()" >
+          <span class="glyphicon glyphicon-search"></span>
+        </button>
+      <button class="btn btn-success pull-right" (click)="openCreateWindow()">
+        <span class="glyphicon glyphicon-plus">{{creatingAccount? '完成' :'创建制卡系统临时账号'}}</span>
+      </button>
     </div>
-    <button class="btn btn-primary"><span class="glyphicon glyphicon-search"></span></button>
-    <button class="btn btn-success pull-right"><span class="glyphicon glyphicon-plus">新建账号</span></button>
   </form>
 </div>
 
-<div class="row">
-  <table class="account-list col-sm-12 table table-hover">
-    <thead>
-      <th>Email</th>
-      <th>公司名称</th>
-      <th>企业编码</th>
-      <th>联系人手机</th>
-      <th></th>
-    </thead>
-    <tbody>
-      <tr *ngFor="let account of accounts">
-        <td>{{account.email}}</td>
-        <td>{{account.companyName}}</td>
-        <td>{{account.companyId}}</td>
-        <td>{{account.mobile}}</td>
-        <td class="buttons">
-          <span class="glyphicon glyphicon-trash" (click)="deleteAccount(account)"></span>
-          <span class="glyphicon glyphicon-cog" (click)="editAccount(account)"></span>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+<div class="row" [collapse]="!creatingAccount">
+  <div class="well well-lg">
+    <app-create-account></app-create-account>
+  </div>
 </div>
 
-<div class="row">
-  <pagination [totalItems]="totalItems" [itemsPerPage]="pageSize" [(ngModel)]="currentPage" (pageChanged)="pageChanged($event)"></pagination>
+<div class="row" [collapse]="creatingAccount">
+  <app-browsing-list *ngIf="criteria == ''" ></app-browsing-list>
+  <app-query-list [collapse]="criteria == ''" [criteria]="criteria" #queryList></app-query-list>
 </div>

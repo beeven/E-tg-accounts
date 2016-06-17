@@ -1,38 +1,34 @@
 import { Component, OnInit } from '@angular/core';
-import {PAGINATION_DIRECTIVES} from 'ng2-bootstrap/components/pagination';
+import { Observable }     from 'rxjs/Observable';
+import { CollapseDirective } from 'ng2-bootstrap/components/collapse';
 import { AccountService } from './account.service';
 import { Account } from './account';
+import { CreateAccountComponent } from './create-account';
+import { BrowsingListComponent } from './browsing-list';
+import { QueryListComponent } from './query-list';
 
 @Component({
   moduleId: module.id,
   selector: 'app-account-list',
   templateUrl: 'account-list.component.html',
   styleUrls: ['account-list.component.css'],
-  directives: [PAGINATION_DIRECTIVES],
+  directives: [CollapseDirective, CreateAccountComponent, BrowsingListComponent, QueryListComponent],
   providers: [AccountService]
 })
 export class AccountListComponent implements OnInit {
-  totalItems:number;
-  currentPage:number = 0;
-  pageSize:number = 5;
-  accounts: Account[];
 
-  constructor(private accountService: AccountService) {
-
-  }
-
-  getAccounts(pageSize:number, currentPage:number) {
-    this.accountService.getAccounts(this.pageSize,this.currentPage)
-      .then((result)=>{
-        this.accounts = result.records;
-        this.totalItems = result.total;
-      });
-  }
-
-  pageChanged(event:any):void {
+  errorMessage: string;
+  creatingAccount = false;
+  criteria = '';
+  constructor() {
   }
   ngOnInit() {
-    this.getAccounts(this.pageSize, this.currentPage);
+
   }
+
+  openCreateWindow() {
+    this.creatingAccount = !this.creatingAccount
+  }
+
 
 }

@@ -6,6 +6,7 @@ var express = require("express"),
 
 
 app.use(bodyParser.json())
+app.use(express.static(__dirname+"/../web/accounts2/dist/"));
 
 database.connect().then(function(){
     app.listen(8020);

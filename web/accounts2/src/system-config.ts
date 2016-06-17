@@ -7,18 +7,21 @@
  **********************************************************************************************/
 /** Map relative paths to URLs. */
 const map: any = {
-  'ng2-bootstrap':'vendor/ng2-bootstrap'
+  'ng2-bootstrap':'vendor/ng2-bootstrap',
+  'angular2-in-memory-web-api': 'https://npmcdn.com/angular2-in-memory-web-api',
 };
 
 /** User packages configuration. */
 const packages: any = {
+  'angular2-in-memory-web-api': { main: 'index.js', defaultExtension: 'js' },
+  'in-memory-data-service': {main: '../in-memory-data-service.js'}
 };
 
 var bootstrapPackages:string[] = [
   'alert',
   'buttons',
   'pagination',
-  'modal',
+  'collapse',
 ]
 
 bootstrapPackages.forEach((pkg)=>{
@@ -46,6 +49,9 @@ const barrels: string[] = [
   'app',
   'app/shared',
   'app/account-list',
+  'app/account-list/create-account',
+  'app/account-list/browsing-list',
+  'app/account-list/query-list',
   /** @cli-barrel */
 ];
 
