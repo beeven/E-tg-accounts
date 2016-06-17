@@ -1,5 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { AlertComponent } from 'ng2-bootstrap/components/alert';
+import { AccountService } from '../account.service';
+
+class CreateResult {
+  companyName: string;
+  password: string;
+  expire: string;
+  userId: string;
+  companyId: string;
+}
 
 @Component({
   moduleId: module.id,
@@ -12,14 +21,14 @@ export class CreateAccountComponent implements OnInit {
 
   private companyId:string;
   private message:string;
+  private createResult:CreateResult;
 
-  alerts: Array<Object>;
+  creating = false;
 
-  constructor() {
-    this.alerts = [
-      {message:"test1", type:"success"},
-      {message:"test2", type:"danger"}
-    ]
+
+  alerts: Array<Object> = [];
+
+  constructor(private accountService:AccountService) {
   }
 
   closeAlert(i:number) {
@@ -29,13 +38,16 @@ export class CreateAccountComponent implements OnInit {
   ngOnInit() {
   }
 
-  createAccount(email:string, companyId:string, mobile:string) {
-    // if(!email || !companyId || !mobile) { return; }
-    // this.accountService.createAccount(email, companyId, mobile)
-    //                    .subscribe(
-    //                      account => { console.log(account) },
-    //                      error => this.errorMessage = <any>error
-    //                    );
+  createAccount() {
+    if(!/\w{10}/.test(this.companyId)) {
+      return this.alerts.push({type:"danger", message:"企业编码不符合规则"});
+    }
+    this.creating = true;
+    this.accountService.createTemporaryAccount(this.companyId)
+                       .subscribe(
+                         account => { console.log(account); this.creating=false; },
+                         error => {this.alerts.push({type:"danger", message:<any>error});this.creating=false;}
+                       );
   }
 
   print() {

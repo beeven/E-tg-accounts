@@ -9,7 +9,7 @@
   </div>
   <div class="form-group">
     <div class="col-sm-offset-2 col-sm-4">
-      <button type="submit" class="btn btn-primary btn-block">查询并创建帐号</button>
+      <button type="submit" class="btn btn-primary btn-block" [disabled]="creating" (click)="createAccount()">查询并创建帐号</button>
     </div>
     <div class="col-sm-4">
       <button type="submit" class="btn btn-warning btn-block" (click)="print()">打 印</button>
@@ -18,7 +18,7 @@
 </form>
 
   <div class="information">
-    <alert *ngFor="let alert of alerts;let i = index" [type]="alert.type" dismissible="true" (close)="closeAlert(i)">
+    <alert *ngFor="let alert of alerts;let i = index" [type]="alert.type" dismissible="true" dismissOnTimeout="2000" (close)="closeAlert(i)">
     {{ alert?.message }}
     </alert>
   </div>
