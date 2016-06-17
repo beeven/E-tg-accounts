@@ -7,11 +7,23 @@
  **********************************************************************************************/
 /** Map relative paths to URLs. */
 const map: any = {
+  'ng2-bootstrap':'vendor/ng2-bootstrap'
 };
 
 /** User packages configuration. */
 const packages: any = {
 };
+
+var bootstrapPackages:string[] = [
+  'alert',
+  'buttons',
+  'pagination',
+  'modal',
+]
+
+bootstrapPackages.forEach((pkg)=>{
+  packages[`ng2-bootstrap/components/${pkg}`] = {main: `../${pkg}.js`}
+});
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
 /***********************************************************************************************
@@ -33,6 +45,7 @@ const barrels: string[] = [
   // App specific barrels.
   'app',
   'app/shared',
+  'app/account-list',
   /** @cli-barrel */
 ];
 

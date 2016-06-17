@@ -1,0 +1,38 @@
+<div class="row">
+  <form class="form-inline">
+    <div class="form-group">
+      <label for="criteria" class="sr-only">搜索</label>
+      <input type="text" id="criteria" class="form-control col-sm-6" placeholder="邮箱地址／手机号码／企业编码">
+    </div>
+    <button class="btn btn-primary"><span class="glyphicon glyphicon-search"></span></button>
+    <button class="btn btn-success pull-right"><span class="glyphicon glyphicon-plus">新建账号</span></button>
+  </form>
+</div>
+
+<div class="row">
+  <table class="account-list col-sm-12 table table-hover">
+    <thead>
+      <th>Email</th>
+      <th>公司名称</th>
+      <th>企业编码</th>
+      <th>联系人手机</th>
+      <th></th>
+    </thead>
+    <tbody>
+      <tr *ngFor="let account of accounts">
+        <td>{{account.email}}</td>
+        <td>{{account.companyName}}</td>
+        <td>{{account.companyId}}</td>
+        <td>{{account.mobile}}</td>
+        <td class="buttons">
+          <span class="glyphicon glyphicon-trash" (click)="deleteAccount(account)"></span>
+          <span class="glyphicon glyphicon-cog" (click)="editAccount(account)"></span>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="row">
+  <pagination [totalItems]="totalItems" [itemsPerPage]="pageSize" [(ngModel)]="currentPage" (pageChanged)="pageChanged($event)"></pagination>
+</div>

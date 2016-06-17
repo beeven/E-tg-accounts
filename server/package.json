@@ -16,6 +16,7 @@
     "mongodb": "^2.1.18"
   },
   "devDependencies": {
-    "mocha": "^2.5.3"
+    "mocha": "^2.5.3",
+    "should": "^9.0.2"
   }
 }
