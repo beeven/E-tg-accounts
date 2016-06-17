@@ -63,6 +63,14 @@ router.post("/createAccount",function(req,res){
         });
 });
 
+router.post("/temporary",function(req,res){
+    var companyId = req.body.companyId;
+    if(!/\w{10}/.test(companyId)) {
+        return res.json({"result":"fail", error:"Invalid companyId"});
+    }
+    db.
+});
+
 
 // Reset account password
 router.post("/setPassword",function(req,res){

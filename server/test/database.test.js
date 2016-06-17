@@ -4,13 +4,30 @@ var MongoClient = require("mongodb").MongoClient;
 var Promise = require("bluebird");
 var pbkdf2 = Promise.promisify(require("crypto").pbkdf2);
 var should = require("should");
+var nock = require("nock");
+const url = require("url");
 
 describe("Database tests",function(){
+    var scope;
+
     var database = require("../database");
     before(function(done){
+        var u = url.parse(config.companyInfoServiceUrl);
+        u.path = null;
+        scope = nock(url.format(u))
+            .get(new RegExp(u.pathname+"\\w{10}"))
+            .reply(200,function(uri, requestBody){
+                return {
+                    companyId:uri.replace(u.pathname,''),
+                    companyName: "Guangtong"
+                }
+            });
         database.connect().then(function(){
             done();
         });
+    });
+    after(function(){
+        nock.restore();
     });
 
     describe("#createAccount",function(){
@@ -31,6 +48,14 @@ describe("Database tests",function(){
             return database.createAccount("35239520@qq.com","4401986999","123455678901")
                 .then(function(){return database.createAccount("35239520@qq.com","4401986999","123455678901");})
                 .should.be.rejectedWith("email exists");
+        });
+    });
+
+    describe("#createTemporaryAccount",function(){
+        it("should create an account with given companyId",function(){
+            return database.createTemporaryAccount("1234567890")
+                .should.be.finally.an.Object()
+                .with.properties(["userId","companyId","companyName","expire","password"])
         });
     });
 

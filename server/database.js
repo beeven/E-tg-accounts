@@ -6,7 +6,8 @@ TODO: paging in redis
 var MongoClient = require("mongodb").MongoClient,
     ObjectID = require("mongodb").ObjectID,
     Promise = require("bluebird"),
-    config = require("./config");
+    config = require("./config"),
+    companyInfoService = require("./company-info-service");
 
 require("bluebird-co");
 
@@ -136,6 +137,17 @@ class Database {
             } else {
                 return yield Promise.reject(new Error("user not found"));
             }
+        })();
+    }
+
+    createTemporaryAccount(companyId) {
+        var that = this;
+        if(!/^\w{10}$/.test(companyId)){
+            return Promise.reject(new Error("invalid companyId"));
+        }
+        return Promise.coroutine(function*(){
+            var info = yield companyInfoService.getCompanyInfo(companyId);
+            
         })();
     }
 }
