@@ -11,7 +11,16 @@ exports.getCompanyInfo = function(companyId) {
                 console.error("Get company info error",err);
                 return reject(new Error("Get company info error"));
             }
-            resolve(JSON.parse(body));
+                var result = JSON.parse(body);
+                resolve({
+                    companyId: result.TRADE_CO,
+                    companyName: result.FULL_NAME,
+                    orgCo: result.COP_GB_CODE
+                });
+
+            // catch(err) {
+            //     reject(new Error("Parse body error:",err));
+            // }
         });
     });
 

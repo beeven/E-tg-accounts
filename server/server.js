@@ -3,17 +3,16 @@ var express = require("express"),
     bodyParser = require("body-parser"),
     database = require("./database");
 
+var routes = require("./routes");
+
 
 
 app.use(bodyParser.json())
 app.use(express.static(__dirname+"/../web/accounts2/dist/"));
 
 database.connect().then(function(){
+    app.use("/",routes);
     app.listen(8020);
 },function(err){
     console.error("Cannot connect to databse:",err);
-})
-
-process.on('exit',function(code){
-    database.dispose();
 });

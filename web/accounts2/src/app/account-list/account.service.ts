@@ -10,7 +10,7 @@ export class AccountService {
   private accountsUrl = 'api/accounts';
 
   getAccounts(pageSize:number, currentPage:number): Observable<any> {
-    return this.http.get(`${this.accountsUrl}`)
+    return this.http.get(`${this.accountsUrl}/${pageSize}/${currentPage}`)
                     .map((res: Response)=>{
                       let body = res.json();
                       console.log(body);
@@ -35,12 +35,19 @@ export class AccountService {
   }
 
   query(criteria:string):Observable<Account[]> {
-    return this.http.get(`${this.accountsUrl}`)
+    return this.http.get(`${this.accountsUrl}/query/${criteria}`)
                     .map(this.extractData)
                     .catch(this.handleError);
   }
 
-  setPassword(userId:string, password:string) {}
+  setPassword(userId:string, password:string) {
+      let body = JSON.stringify({userId, password});
+      let headers = new Headers({ 'Content-Type': 'application/json' });
+      let options = new RequestOptions({ headers });
+      return this.http.post(`${this.accountsUrl}/setPassword`, body, options)
+                    .map(this.extractData)
+                    .catch(this.handleError);
+  }
   createAccount(email:string, companyId:string, mobile:string):Observable<Account> {
     let body = JSON.stringify({email, companyId, mobile});
     let headers = new Headers({ 'Content-Type': 'application/json' });
