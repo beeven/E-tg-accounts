@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AlertComponent } from 'ng2-bootstrap/components/alert';
 import { AccountService } from '../account.service';
+import { CnDatePipe } from '../cn-date.pipe';
 
 class CreateResult {
   companyName: string;
@@ -15,7 +16,8 @@ class CreateResult {
   selector: 'app-create-account',
   templateUrl: 'create-account.component.html',
   styleUrls: ['create-account.component.css'],
-  directives: [AlertComponent]
+  directives: [AlertComponent],
+  pipes: [CnDatePipe]
 })
 export class CreateAccountComponent implements OnInit {
 
@@ -52,7 +54,6 @@ export class CreateAccountComponent implements OnInit {
     this.accountService.createTemporaryAccount(this.companyId)
                        .subscribe(
                          (account) => {
-                           console.log(account);
                            this.creating=false;
                            this.createResult = <CreateResult>account;
                          },

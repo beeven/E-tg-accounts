@@ -42,13 +42,13 @@ class Database {
             var passwd = predefinedPassword;
             if(typeof(predefinedPassword) === 'undefined' || predefinedPassword == null) {
                 passwd = yield randomBytes(4);
-                passwd = passwd.toString("base64").toUpperCase().substr(0,6);
+                passwd = passwd.toString("base64").replace(/\+/g,'x').replace(/\//g,'z').toUpperCase().substr(0,6);
             }
 
             var salt = yield randomBytes(64);
             const md5sum = crypto.createHash('md5');
 
-            var hashedPasswd = md5sum.update(passwd).digest();
+            var hashedPasswd = md5sum.update(passwd).digest('hex');
             var hashed = yield pbkdf2(hashedPasswd, salt, 10000, 256, 'sha256');
             return {
                 salt: salt,
@@ -163,7 +163,6 @@ class Database {
     }
 
     createTemporaryAccount(companyId) {
-      console.log("creating temporary account",companyId)
         var that = this;
         if(!/^\w{10}$/.test(companyId)){
             return Promise.reject(new Error("invalid companyId"));
@@ -175,6 +174,7 @@ class Database {
             var expire = new Date(today.setDate(today.getDate()+1));
             var result = yield that.users.insertOne({
                 "email":info.companyId,
+                "displayName": info.companyName,
                 "companyName":info.companyName,
                 "companyId":info.companyId,
                 "password":passwordInfo.hash,

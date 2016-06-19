@@ -21,7 +21,7 @@
 </form>
 
   <div class="information">
-    <alert *ngFor="let alert of alerts;let i = index" [type]="alert.type" dismissible="true" dismissOnTimeout="2000" (close)="closeAlert(i)">
+    <alert *ngFor="let alert of alerts;let i = index" [type]="alert.type" dismissible="true" dismissOnTimeout="4000" (close)="closeAlert(i)">
     {{ alert?.message }}
     </alert>
   </div>
@@ -41,7 +41,7 @@
         <td class="head">登录密码</td><td>{{createResult.password}}</td>
       </tr>
       <tr>
-        <td class="head">帐号有效期</td><td>{{createResult.expire}}</td>
+        <td class="head">帐号有效期</td><td>{{createResult.expire | cnDate:'LLL'}}</td>
       </tr>
     </tbody>
   </table>

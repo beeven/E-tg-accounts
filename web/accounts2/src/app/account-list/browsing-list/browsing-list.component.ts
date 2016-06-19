@@ -23,7 +23,7 @@ export class BrowsingListComponent implements OnInit {
     this.getAccounts(this.pageSize, this.currentPage);
   }
   getAccounts(pageSize:number, currentPage:number) {
-    this.accountService.getAccounts(this.pageSize,this.currentPage)
+    this.accountService.getAccounts(this.pageSize,this.currentPage-1)
     .subscribe(
       (result:any)=>{
         this.accounts = result.records;
@@ -35,13 +35,13 @@ export class BrowsingListComponent implements OnInit {
   }
 
   pageChanged(event:any):void {
+    this.currentPage = event.page;
     this.getAccounts(this.pageSize,this.currentPage);
   }
 
   deleteAccount(account){
     this.accountService.deleteAccount(account.userId).subscribe(
         (arg)=>{
-          console.log("arg",arg);
           var index = this.accounts.indexOf(account);
           if(index != -1) {
             this.accounts.splice(index,1);

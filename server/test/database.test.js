@@ -97,7 +97,7 @@ describe("Database tests",function(){
                 var salt = account.password.buffer.slice(0,64);
                 var expected = account.password.buffer.slice(64);
                 var hash = crypto.createHash('md5');
-                var hashed = hash.update("1234").digest();
+                var hashed = hash.update("1234").digest('hex');
                 var actual = yield pbkdf2(hashed,salt,10000,256,'sha256');
 
                 if(expected.equals(actual)) {

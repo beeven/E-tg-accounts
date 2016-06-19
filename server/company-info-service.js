@@ -5,6 +5,13 @@ var Promise = require("bluebird");
 var serviceUrl = config.companyInfoServiceUrl;
 
 exports.getCompanyInfo = function(companyId) {
+
+  return Promise.resolve({
+    companyId: 4401986999,
+    companyName: "海通临时帐号",
+    orgCo: "123456789"
+  });
+  /*
     return new Promise((resolve,reject)=>{
         request.get(serviceUrl+companyId,function(err,response,body){
             if(err || response.statusCode != 200) {
@@ -23,5 +30,5 @@ exports.getCompanyInfo = function(companyId) {
             // }
         });
     });
-
+*/
 }

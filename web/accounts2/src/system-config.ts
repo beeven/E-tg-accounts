@@ -9,12 +9,14 @@
 const map: any = {
   'ng2-bootstrap':'vendor/ng2-bootstrap',
   'angular2-in-memory-web-api': 'https://npmcdn.com/angular2-in-memory-web-api',
+  'moment':'vendor/moment'
 };
 
 /** User packages configuration. */
 const packages: any = {
   'angular2-in-memory-web-api': { main: 'index.js', defaultExtension: 'js' },
-  'in-memory-data-service': {main: '../in-memory-data-service.js'}
+  'in-memory-data-service': {main: '../in-memory-data-service.js'},
+  'moment':{main: 'min/moment-with-locales.js',defaultExtension: 'js'}
 };
 
 var bootstrapPackages:string[] = [

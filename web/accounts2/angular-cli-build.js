@@ -19,7 +19,8 @@ module.exports = function(defaults) {
       'bootstrap/dist/css/*',
       'bootstrap/dist/fonts/*',
       'ng2-bootstrap/bundles/*',
-      'ng2-bootstrap/components/**/*.js'
+      'ng2-bootstrap/components/**/*.js',
+      'moment/min/*.js'
     ]
   });
 };
