@@ -5,7 +5,7 @@ var accounts = require("./accounts");
 
 
 router.get("/query/:criteria",accounts.query);
-router.get("/browse/:pageSize/:currentPage",accounts.browse);
+router.get("/:pageSize/:currentPage",accounts.browse);
 // Create new regular account
 router.post("/",accounts.createAccount);
 router.post("/temporary",accounts.createTemporaryAccount);

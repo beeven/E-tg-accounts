@@ -44,7 +44,7 @@ class Database {
                 passwd = yield randomBytes(4);
                 passwd = passwd.toString("base64").toUpperCase().substr(0,6);
             }
-            
+
             var salt = yield randomBytes(64);
             const md5sum = crypto.createHash('md5');
 
@@ -163,6 +163,7 @@ class Database {
     }
 
     createTemporaryAccount(companyId) {
+      console.log("creating temporary account",companyId)
         var that = this;
         if(!/^\w{10}$/.test(companyId)){
             return Promise.reject(new Error("invalid companyId"));

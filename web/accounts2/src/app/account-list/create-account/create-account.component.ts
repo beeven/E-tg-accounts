@@ -21,7 +21,13 @@ export class CreateAccountComponent implements OnInit {
 
   private companyId:string;
   private message:string;
-  private createResult:CreateResult;
+  private createResult:CreateResult = {
+    companyName: "",
+    password: "",
+    expire: "",
+    userId: "",
+    companyId: ""
+  };
 
   creating = false;
 
@@ -45,7 +51,11 @@ export class CreateAccountComponent implements OnInit {
     this.creating = true;
     this.accountService.createTemporaryAccount(this.companyId)
                        .subscribe(
-                         account => { console.log(account); this.creating=false; },
+                         (account) => {
+                           console.log(account);
+                           this.creating=false;
+                           this.createResult = <CreateResult>account;
+                         },
                          error => {this.alerts.push({type:"danger", message:<any>error});this.creating=false;}
                        );
   }

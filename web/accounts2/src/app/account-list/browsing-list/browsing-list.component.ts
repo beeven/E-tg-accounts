@@ -13,7 +13,7 @@ import { AccountService } from '../account.service';
 export class BrowsingListComponent implements OnInit {
   totalItems:number;
   currentPage:number = 1;
-  pageSize:number = 5;
+  pageSize:number = 10;
   errorMessage:string;
 
   accounts: Account[];
@@ -28,8 +28,6 @@ export class BrowsingListComponent implements OnInit {
       (result:any)=>{
         this.accounts = result.records;
         this.totalItems = result.total;
-        console.log(this.accounts);
-        console.log(this.totalItems);
       },
       (error) => {this.errorMessage = <any>error;}
     );
@@ -42,13 +40,14 @@ export class BrowsingListComponent implements OnInit {
 
   deleteAccount(account){
     this.accountService.deleteAccount(account.userId).subscribe(
-        ()=>{
+        (arg)=>{
+          console.log("arg",arg);
           var index = this.accounts.indexOf(account);
           if(index != -1) {
             this.accounts.splice(index,1);
           }
         },
-        error => this.errorMessage = <any>error
+        (error) =>{ this.errorMessage = <any>error; console.error("catched error in list:",error) }
       );
   }
 }

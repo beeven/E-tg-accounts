@@ -42,4 +42,22 @@ export class QueryListComponent implements OnInit {
                       (error) => this.errorMessage = <any>error
                     );
   }
+
+  deleteAccount(account){
+    this.accountService.deleteAccount(account.userId)
+          .subscribe(
+            (arg) => {
+              console.log("arg",arg);
+              var index = this.accounts.indexOf(account);
+              if(index != -1) {
+                this.accounts.splice(index,1);
+              }
+            },
+            (error) =>{ this.errorMessage = <any>error; console.error("catched error in list:",error) }
+          )
+  }
+
+  editAccount(account) {
+
+  }
 }

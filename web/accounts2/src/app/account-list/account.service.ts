@@ -13,16 +13,21 @@ export class AccountService {
     return this.http.get(`${this.accountsUrl}/${pageSize}/${currentPage}`)
                     .map((res: Response)=>{
                       let body = res.json();
-                      console.log(body);
+                      if(body.result != "ok") {
+                        throw({status:200, statusText:body.error});
+                      }
                       return {
-                        total: body.data.length,
-                        records: body.data
+                        total: body.data.total,
+                        records: body.data.records
                       }
                     })
                     .catch(this.handleError);
   }
   private extractData(res: Response) {
     let body = res.json();
+    if(body.result != "ok") {
+      throw({status:200,statusText:body.error});
+    }
     return body.data || { };
   }
   private handleError (error: any) {
@@ -67,7 +72,9 @@ export class AccountService {
   }
 
   deleteAccount(userId:string){
-    return this.http.delete(`${this.accountsUrl}/${userId}`).catch(this.handleError);
+    return this.http.delete(`${this.accountsUrl}/${userId}`)
+                  .map(this.extractData)
+                  .catch(this.handleError);
   }
 
 }

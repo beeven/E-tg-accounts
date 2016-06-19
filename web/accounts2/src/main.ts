@@ -13,6 +13,6 @@ if (environment.production) {
 
 bootstrap(AppComponent,[
   HTTP_PROVIDERS,
-  {provide: XHRBackend, useClass: InMemoryBackendService },
-  {provide: SEED_DATA, useClass: InMemoryDataService }
+  // {provide: XHRBackend, useClass: InMemoryBackendService },
+  // {provide: SEED_DATA, useClass: InMemoryDataService }
 ]);

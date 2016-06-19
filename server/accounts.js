@@ -1,5 +1,5 @@
 var express = require("express"),
-    router = exporess.Router(),
+    router = express.Router(),
     db = require("./database");
 
 exports.query = function(req, res) {
@@ -13,7 +13,7 @@ exports.query = function(req, res) {
         .then(function(records){
             res.json({"result":"ok","data":records});
         },function(err){
-            res.json({"result":"fail", "error":err});
+            res.json({"result":"fail", "error":err.toString()});
         });
 }
 
@@ -23,7 +23,7 @@ exports.browse = function(req,res) {
     if(currentPage == NaN || currentPage < 0) {
         currentPage = 0;
     }
-    if(pageSize == NaN || pageSize < 10) {
+    if(pageSize == NaN || pageSize < 0) {
         pageSize = 10;
     }
 
@@ -31,7 +31,7 @@ exports.browse = function(req,res) {
         .then(function(result){
             res.json({"result":"ok", data: result});
         },function(err){
-            res.json({"result":"fail", "error":err});
+            res.json({"result":"fail", "error":err.toString()});
         });
 }
 
@@ -48,7 +48,7 @@ exports.createAccount = function(req,res){
         .then(function(account){
             res.json({result:"ok", data: account});
         },function(err){
-            res.json({"result":"fail", error:err});
+            res.json({"result":"fail", error:err.toString()});
         });
 }
 
@@ -60,7 +60,8 @@ exports.createTemporaryAccount  = function(req,res){
     db.createTemporaryAccount(companyId).then(function(account){
         return res.json({"result":"ok", data: account});
     },function(err){
-        return res.json({"result":"fail", error: err});
+        console.error("createTemporaryAccount error",err);
+        return res.json({"result":"fail", error: err.toString()});
     });
 }
 
@@ -74,19 +75,21 @@ exports.setPassword = function(req,res){
         .then(function(){
             res.json({"result":"ok"});
         },function(err){
-            res.json({"result":"fail", error:err});
+            res.json({"result":"fail", error:err.toString()});
         });
 }
 
 exports.deleteAccount = function(req, res) {
-    var userId = req.param.userId;
+
+    var userId = req.params.userId;
+    console.log("accounts deleting",userId);
     if(!/\w{24}/.test(userId)) {
         return res.json({"result":"fail", error:"userId is not valid"});
     }
     db.deleteAccount(userId).then(function(){
         return res.json({"result":"ok"});
     },function(err){
-        return res.json({"result":"fail", error:err});
+        return res.json({"result":"fail", error:err.toString()});
     });
 
 }

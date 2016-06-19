@@ -9,7 +9,7 @@ exports.getCompanyInfo = function(companyId) {
         request.get(serviceUrl+companyId,function(err,response,body){
             if(err || response.statusCode != 200) {
                 console.error("Get company info error",err);
-                return reject(new Error("Get company info error"));
+                return reject(new Error("获取企业信息错误"));
             }
                 var result = JSON.parse(body);
                 resolve({
