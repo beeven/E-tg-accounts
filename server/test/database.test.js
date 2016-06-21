@@ -49,7 +49,14 @@ describe("Database tests",function(){
         beforeEach(function(done){
             return Promise.coroutine(function*(){
                 var db = yield MongoClient.connect(config.database.url);
-                yield db.collection("users").deleteOne({"email":"35239520@qq.com"});
+                yield db.collection("users").deleteMany({"email":"35239520@qq.com"});
+                done();
+            })();
+        });
+        afterEach(function(done){
+            return Promise.coroutine(function*(){
+                var db = yield MongoClient.connect(config.database.url);
+                yield db.collection("users").deleteMany({"email":"35239520@qq.com"});
                 done();
             })();
         });
@@ -69,11 +76,36 @@ describe("Database tests",function(){
     });
 
     describe("#createTemporaryAccount",function(){
+        beforeEach(function(done){
+            return Promise.coroutine(function*(){
+                var db = yield MongoClient.connect(config.database.url);
+                yield db.collection("users").deleteMany({"email":"1234567890"});
+                done();
+            })();
+        })
         it("should create an account with given companyId",function(){
             return database.createTemporaryAccount("1234567890")
                 .should.be.finally.an.Object()
                 .with.properties(["userId","companyId","companyName","expire","password"])
                 .and.the.property("expire").is.a.Date();
+        });
+        it("should not create another account if the that account already exists.", function(done){
+            return (Promise.coroutine(function*(){
+                var r1 = yield database.createTemporaryAccount("1234567890");
+                var r2 = yield database.createTemporaryAccount("1234567890");
+                var db = yield MongoClient.connect(config.database.url);
+                var results = yield db.collection("users").find({"email":"1234567890"}).toArray();
+                results.length.should.eql(1);
+                var salt = results[0].password.buffer.slice(0,64);
+                var expected = results[0].password.buffer.slice(64).toString('hex');
+                var hash = crypto.createHash('md5');
+                var hashed = hash.update(r2.password).digest('hex');
+                var actual = yield pbkdf2(hashed,salt,10000,256,'sha256');
+                expected.should.eql(actual.toString('hex'));
+                done()
+            })()).catch((err)=>{
+                done(err);
+            });
         });
     });
 
@@ -95,16 +127,15 @@ describe("Database tests",function(){
                 var db = yield MongoClient.connect(config.database.url);
                 var account = yield db.collection("users").find({_id: userId}).limit(1).next();
                 var salt = account.password.buffer.slice(0,64);
-                var expected = account.password.buffer.slice(64);
+                var expected = account.password.buffer.slice(64).toString('hex');
                 var hash = crypto.createHash('md5');
                 var hashed = hash.update("1234").digest('hex');
                 var actual = yield pbkdf2(hashed,salt,10000,256,'sha256');
-
-                if(expected.equals(actual)) {
-                    return yield Promise.resolve();
-                } else {
-                    return yield Promise.reject(new Error("not match"));
+                if(expected == actual) {
+                    console.log("they are equal");
                 }
+                expected.should.eql(actual.toString('hex'));
+
             })()).should.be.fulfilled();
         });
         it("should throw error if userId is not a valid objectID",function(){
@@ -153,6 +184,14 @@ describe("Database tests",function(){
                 yield users.deleteOne({"email":"35239520@qq.com"});
                 var result = yield users.insertOne({email:"35239520@qq.com",companyId:"4401986999"});
                 userId = result.insertedId;
+                done();
+            })();
+        });
+        afterEach(function(done){
+            return Promise.coroutine(function*(){
+                var db = yield MongoClient.connect(config.database.url);
+                var users = db.collection("users");
+                yield users.deleteMany({"email":"35239520@qq.com"});
                 done();
             })();
         });
