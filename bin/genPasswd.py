@@ -2,8 +2,8 @@
 #-*- coding: UTF-8 -*-
 
 import hashlib,os,random
-import pymongo
 import pymssql
+from pymongo import MongoClient
 
 def hashPassword(passwd):
     salt = os.urandom(64)
@@ -19,5 +19,44 @@ def generatePassword():
     return ''.join(chars)
 
 
-def generateAccount(companyId):
-    pass
+def generateAccount(companyId, displayName, orgCo, ssc, mobile):
+    passwd = generatePassword()
+    accountInfo = {
+        "companyId": companyId,
+        "displayName": displayName,
+        "orgCo":orgCo,
+        "email":companyId,
+        "mobile":mobile,
+        "ssc":ssc,
+        "authenticationMode":4,
+        "password": hashPassword(passwd.encode())
+    }
+    return (accountInfo, passwd)
+
+def getCompanyInfoes():
+    conn = pymssql.connect("192.168.2.122","risk_readonly","risk_readonly","RiskH2001")
+    cursor = conn.cursor(as_dict=True)
+    cursor.execute("""select TRADE_CO, FULL_NAME, COP_GB_CODE, SOCIAL_CREDIT_CODE, CONTACT_MOBILE
+                        from dbo.COMPANY_REL_VIEW
+                        where CONTACT_MOBILE is not null""")
+    for row in cursor:
+        yield row
+    conn.close()
+
+def insertAccounts():
+    count = 0
+    client = MongoClient("mongo")
+    db = client["test"]
+    users = db["users"]
+    accounts = db["accounts"]
+    for row in getCompanyInfoes():
+        accountInfo = generateAccount(row['TRADE_CO'],row['FULL_NAME'],row['COP_GB_CODE'],row['SOCIAL_CREDIT_CODE'], row['CONTACT_MOBILE'])
+        users.replace_one({"email":row['TRADE_CO']},accountInfo[0],upsert=True)
+        accounts.update_one({"email":row['TRADE_CO']},{"$set":{"password":accountInfo[1]}}, upsert=True)
+        count += 1
+        yield count
+    client.close()
+
+if __name__=="__main__":
+    for i in insertAccounts():
+        print(i, end='\r')
