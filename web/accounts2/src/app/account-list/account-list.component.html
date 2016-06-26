@@ -3,9 +3,9 @@
     <div class="form-group">
       <label for="criteria" class="sr-only control-label">搜索</label>
       <div class="col-sm-4">
-        <input type="text" id="criteria" class="form-control" [(ngModel)]="criteria" placeholder="登录名／手机号码／企业编码">
+        <input #term type="text" id="criteria" class="form-control" (keyup)="queryList.query(term.value)" [(ngModel)]="criteria" placeholder="登录名／手机号码／企业编码">
       </div>
-        <button class="btn btn-default" (click)="queryList.query()" >
+        <button class="btn btn-default" (click)="queryList.query(term.value)" >
           <span class="glyphicon glyphicon-search"></span>
         </button>
       <button class="btn btn-success pull-right" (click)="openCreateWindow()">
@@ -23,5 +23,5 @@
 
 <div class="row" [collapse]="creatingAccount">
   <app-browsing-list *ngIf="criteria == ''" ></app-browsing-list>
-  <app-query-list [collapse]="criteria == ''" [criteria]="criteria" #queryList></app-query-list>
+  <app-query-list [collapse]="criteria == ''" #queryList></app-query-list>
 </div>

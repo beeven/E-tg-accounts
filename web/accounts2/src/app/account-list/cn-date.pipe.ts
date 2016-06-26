@@ -9,8 +9,8 @@ import * as moment from 'moment';
 export class CnDatePipe implements PipeTransform {
 
   transform(value: any, format?: any): any {
-    console.log(format);
-    return moment(value).locale('zh-cn').format(format || 'YYYY-MM-DD');
+    var d = moment(value);
+    return d.isValid() ? d.locale('zh-cn').format(format || 'YYYY-MM-DD') : value;
   }
 
 }

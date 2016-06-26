@@ -1,7 +1,9 @@
 /*
 TODO: paging in redis
 */
+
 "use strict";
+
 
 var MongoClient = require("mongodb").MongoClient,
     ObjectID = require("mongodb").ObjectID,
@@ -172,17 +174,26 @@ class Database {
             var passwordInfo = yield that.generatePassword();
             var today = new Date();
             var expire = new Date(today.setDate(today.getDate()+1));
-            var result = yield that.users.insertOne({
-                "email":info.companyId,
-                "displayName": info.companyName,
-                "companyName":info.companyName,
-                "companyId":info.companyId,
-                "password":passwordInfo.hash,
-                "expire": expire
-            });
-            if(result.insertedCount == 1) {
+            var result = yield that.users.findOneAndUpdate({"email":companyId},
+              {
+                  $set: {
+                      "email":info.companyId,
+                      "displayName": info.companyName,
+                      "companyName":info.companyName,
+                      "companyId":info.companyId,
+                      "password":passwordInfo.hash,
+                      "expire": expire
+                  }
+              }, {
+                upsert: true,
+                returnOriginal: false,
+                projection: {
+                  "_id":1
+                }
+              });
+            if(result.ok == 1) {
                 return yield Promise.resolve({
-                    userId: result.insertedId.toString(),
+                    userId: result.value._id.toString(),
                     email: info.companyId,
                     companyName: info.companyName,
                     companyId: info.companyId,
