@@ -80,9 +80,7 @@ exports.setPassword = function(req,res){
 }
 
 exports.deleteAccount = function(req, res) {
-
     var userId = req.params.userId;
-    console.log("accounts deleting",userId);
     if(!/\w{24}/.test(userId)) {
         return res.json({"result":"fail", error:"userId is not valid"});
     }

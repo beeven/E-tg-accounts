@@ -31,3 +31,6 @@ web/accounts2/e2e/*.map
 #System Files
 .DS_Store
 Thumbs.db
+
+__pycache__/
+*.pyc

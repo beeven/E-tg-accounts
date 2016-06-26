@@ -1,7 +1,7 @@
 /*
 TODO: paging in redis
 */
-
+"use strict";
 
 var MongoClient = require("mongodb").MongoClient,
     ObjectID = require("mongodb").ObjectID,
