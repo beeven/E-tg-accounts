@@ -65,7 +65,7 @@ class Database {
         return Promise.coroutine(function*(){
             var count = yield that.users.count();
             var records = yield that.users.aggregate([
-                {$project:{ _id:0,userId:"$_id", email:1, comapnyId:1, companyName:1, mobile:1}}])
+                {$project:{ _id:0,userId:"$_id", email:1, companyId:1, companyName:1, mobile:1}}])
                 .skip(currentPage*pageSize)
                 .limit(pageSize)
                 .toArray();

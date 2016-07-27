@@ -55,13 +55,13 @@ exports.createAccount = function(req,res){
 exports.createTemporaryAccount  = function(req,res){
     var companyId = req.body.companyId;
     if(!/\w{10}/.test(companyId)) {
-        return res.json({"result":"fail", error:"Invalid companyId"});
+        return res.json({"result":"fail", error:"企业编码不符合规则"});
     }
     db.createTemporaryAccount(companyId).then(function(account){
         return res.json({"result":"ok", data: account});
     },function(err){
         console.error("createTemporaryAccount error",err);
-        return res.json({"result":"fail", error: err.toString()});
+        return res.json({"result":"fail", error: err.message});
     });
 }
 

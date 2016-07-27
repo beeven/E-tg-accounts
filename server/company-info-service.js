@@ -21,6 +21,10 @@ exports.getCompanyInfo = function(companyId) {
                 return reject(new Error("获取企业信息错误"));
             }
                 var result = JSON.parse(body);
+                if(result.CUSTOMS_CODE.substr(0,2) != '51') {
+                    return reject(new Error("该企业非广州关区企业"));
+                }
+
                 resolve({
                     companyId: result.TRADE_CO,
                     companyName: result.FULL_NAME,
@@ -32,5 +36,5 @@ exports.getCompanyInfo = function(companyId) {
             // }
         });
     });
-    
+
 }
